@@ -33,7 +33,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.lattice.eventguest.guestlist.data.Guest
 import com.lattice.eventguest.guestlist.presentation.components.AllGuestListItem
 import com.lattice.eventguest.guestlist.presentation.components.GuestSearchBar
 

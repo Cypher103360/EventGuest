@@ -1,9 +1,10 @@
 package com.lattice.eventguest.guestlist.di
 
 import com.lattice.eventguest.guestlist.common.Constants.BASE_URL
+import com.lattice.eventguest.guestlist.data.remote.EventApiService
 import com.lattice.eventguest.guestlist.data.remote.GuestApiService
+import com.lattice.eventguest.guestlist.data.remote.PeopleApiService
 import com.lattice.eventguest.guestlist.data.repository.EventRepository
-import com.lattice.eventguest.guestlist.data.repository.EventRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -32,17 +33,35 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideMyApi(): GuestApiService {
+    fun provideMyApi(): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .client(provideOkHttpClient())
             .build()
-            .create(GuestApiService::class.java)
     }
 
     @Provides
-    fun provideMyRepository(myApi: GuestApiService): EventRepository {
-        return EventRepositoryImpl(myApi)
+    @Singleton
+    fun provideGuestApiService(retrofit: Retrofit): GuestApiService {
+        return retrofit.create(GuestApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun providePeopleApiService(retrofit: Retrofit): PeopleApiService {
+        return retrofit.create(PeopleApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideEventApiService(retrofit: Retrofit): EventApiService {
+        return retrofit.create(EventApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideMyRepository(guestApiService: GuestApiService): EventRepository {
+        return EventRepositoryImpl(guestApiService)
     }
 }

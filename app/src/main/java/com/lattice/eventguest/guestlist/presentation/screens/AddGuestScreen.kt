@@ -21,14 +21,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.lattice.eventguest.guestlist.data.Guest
 import com.lattice.eventguest.guestlist.presentation.components.AddGuestListItem
+import com.lattice.eventguest.guestlist.presentation.viewmodel.GuestViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddGuestScreen(
-    navController: NavController
+    navController: NavController,
+    viewModel: GuestViewModel = hiltViewModel()
 ) {
     val guestList = listOf(
         Guest("Naveen", "Singh", "General", "2"),
@@ -77,7 +79,7 @@ fun AddGuestScreen(
                     val guest = guestList[item]
                     val isChecked = remember { mutableStateOf(false) }
                     AddGuestListItem(
-                        guestName = "${guest.name} ${guest.surname}",
+                        guestName = "${guest.name}",
                         isChecked = isChecked.value,
                         onCheckChanged = {
                             isChecked.value = it
