@@ -1,5 +1,8 @@
 package com.lattice.eventguest.guestlist.data.model
 
+import androidx.annotation.Keep
+
+@Keep
 data class Guest(
     val address: String,
     val arrived: Boolean,

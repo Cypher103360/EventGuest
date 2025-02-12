@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.MoreVert
@@ -18,12 +19,15 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.lattice.eventguest.guestlist.presentation.components.DemoEventItem
+import com.lattice.eventguest.guestlist.presentation.viewmodel.EventViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GuestListScreen(
-    onEvenClick: (String) -> Unit
+    onEvenClick: (String) -> Unit,
+    viewModel: EventViewModel = hiltViewModel()
 ) {
     Scaffold(
         topBar = {
@@ -61,11 +65,17 @@ fun GuestListScreen(
         Column(modifier = Modifier
             .padding(contentPadding)
             .fillMaxSize()) {
-            DemoEventItem(
-                title = "A demo event",
-                date = "19 Feb 2025 01:30",
-                onEventClick = { onEvenClick("A demo event") }
-            )
+
+            LazyColumn {
+                items(viewModel.eventList) { item ->
+                    DemoEventItem(
+                        title = item.title,
+                        date = "19 Feb 2025 01:30",
+                        onEventClick = { onEvenClick("A demo event") }
+                    )
+                }
+            }
+
         }
     }
 }
