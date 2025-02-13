@@ -4,4 +4,5 @@ import com.lattice.eventguest.guestlist.data.model.Event
 
 interface EventRepository {
     suspend fun fetchEvents(): List<Event>
+    suspend fun addEvent(event: Event): Event
 }

@@ -1,6 +1,7 @@
 package com.lattice.eventguest.guestlist.presentation.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,88 +19,70 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.lattice.eventguest.guestlist.data.model.Guest
 import com.lattice.eventguest.ui.theme.EventGuestTheme
 
 @Composable
 fun AllGuestListItem(
-    name: String,
-    surname: String,
-    guestClass: String,
-    checkInCount: String
+    guest: Guest,
+    onGuestClick: () -> Unit
 ) {
-    Box {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+    Box(modifier = Modifier
+        .clickable {
+            onGuestClick()
+        }) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+            horizontalAlignment = Alignment.Start
         ) {
-            Box(
-                modifier = Modifier
-                    .background(color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = .5f))
+            Text(guest.name)
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(guest.email)
+            Spacer(modifier = Modifier.height(4.dp))
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
             ) {
-                Column(
+                Box(
                     modifier = Modifier
-                        .padding(vertical = 20.dp, horizontal = 16.dp),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
+                        .clip(RoundedCornerShape(2.dp))
+                        .background(
+                            color = Color(0xffe99d2a)
+                        )
                 ) {
                     Text(
-                        text = "0 / $checkInCount",
+                        text = guest.mobile,
+                        modifier = Modifier.padding(4.dp),
                         style = TextStyle(
-                            fontSize = MaterialTheme.typography.titleLarge.fontSize
-                        )
-                    )
-                    Text(
-                        text = "CHECK-IN",
-                        style = TextStyle(
-                            fontSize = MaterialTheme.typography.titleSmall.fontSize,
-                            fontWeight = FontWeight.Light
+                            fontSize = MaterialTheme.typography.bodySmall.fontSize,
+                            color = MaterialTheme.colorScheme.onPrimary
                         )
                     )
                 }
-            }
-            Box(
-                modifier = Modifier.weight(1f)
-            ) {
-                Row(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                ) {
-                    Column(
-                        modifier = Modifier.weight(1f),
-                        horizontalAlignment = Alignment.Start
-                    ) {
-                        Text(surname)
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Box(
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(2.dp))
-                                .background(
-                                    color = if (guestClass == "VIP") {
-                                        Color(0xffe99d2a)
-                                    } else {
-                                        Color.Red
-                                    }
-                                )
-                        ) {
-                            Text(
-                                text = guestClass,
-                                modifier = Modifier.padding(4.dp),
-                                style = TextStyle(
-                                    fontSize = MaterialTheme.typography.bodySmall.fontSize,
-                                    color = MaterialTheme.colorScheme.onPrimary
-                                )
-                            )
+
+                Text(
+                    modifier = Modifier.padding(8.dp),
+                    text = if (guest.arrived) {
+                        "Arrived"
+                    } else {
+                        "Not Arrived"
+                    },
+                    style = TextStyle(
+                        color = if (guest.arrived) {
+                            Color.Green
+                        } else {
+                            Color.Red
                         }
-                    }
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(name)
-                    }
-                }
+                    )
+                )
             }
+
         }
+
     }
 }
 
@@ -108,11 +91,10 @@ fun AllGuestListItem(
 @Composable
 fun AllGuestListItemPreview() {
     EventGuestTheme {
-        AllGuestListItem(
-            name = "Naveen",
-            surname = "Singh",
-            guestClass = "General",
-            checkInCount = "2"
-        )
+//        AllGuestListItem(
+//            name = "Naveen",
+//            email = "Singh",
+//            number = "General"
+//        )
     }
 }

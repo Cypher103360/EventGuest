@@ -5,11 +5,17 @@ import com.lattice.eventguest.guestlist.data.remote.EventApiService
 import com.lattice.eventguest.guestlist.data.remote.GuestApiService
 import com.lattice.eventguest.guestlist.data.remote.PeopleApiService
 import com.lattice.eventguest.guestlist.data.repository.EventRepository
+import com.lattice.eventguest.guestlist.data.repository.GuestRepository
+import com.lattice.eventguest.guestlist.data.repository.PeopleRepository
+import com.lattice.eventguest.guestlist.data.repository.impl.EventRepositoryImpl
+import com.lattice.eventguest.guestlist.data.repository.impl.GuestRepositoryImpl
+import com.lattice.eventguest.guestlist.data.repository.impl.PeopleRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
@@ -17,6 +23,10 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+    private val interceptor: HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
+        level = HttpLoggingInterceptor.Level.BODY
+    }
+
     @Provides
     @Singleton
     fun provideOkHttpClient(): OkHttpClient {
@@ -28,16 +38,20 @@ object AppModule {
                     .header("Content-Type","application/json")
                 val request = requestBuilder.build()
                 chain.proceed(request)
-            }.build()
+            }
+            .also { client ->
+                client.addInterceptor(interceptor)
+            }
+            .build()
     }
 
     @Provides
     @Singleton
-    fun provideMyApi(): Retrofit {
+    fun provideMyApi(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
-            .client(provideOkHttpClient())
+            .client(okHttpClient)
             .build()
     }
 
@@ -61,7 +75,20 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideMyRepository(guestApiService: GuestApiService): EventRepository {
+    fun provideMyRepository(guestApiService: EventApiService): EventRepository {
         return EventRepositoryImpl(guestApiService)
     }
+
+    @Provides
+    @Singleton
+    fun provideGuestRepository(guestApiService: GuestApiService): GuestRepository {
+        return GuestRepositoryImpl(guestApiService)
+    }
+
+    @Provides
+    @Singleton
+    fun providePeopleRepository(guestApiService: PeopleApiService): PeopleRepository {
+        return PeopleRepositoryImpl(guestApiService)
+    }
+
 }

@@ -25,6 +25,7 @@ camerax = "1.3.4"
 
 # QR Scanner
 zxing-core = "3.3.3"
+appcompat = "1.7.0"
 
 
 [libraries]
@@ -65,10 +66,12 @@ androidx-camera-view = { module = "androidx.camera:camera-view", version.ref = "
 
 # QR Scanner
 zxing-core = { module = "com.google.zxing:core", version.ref = "zxing-core" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kotlin-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hiltAndroid" }
 

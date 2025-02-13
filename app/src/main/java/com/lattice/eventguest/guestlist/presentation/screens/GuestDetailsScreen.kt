@@ -39,8 +39,10 @@ import androidx.navigation.compose.rememberNavController
 @Composable
 fun GuestDetailsScreen(
     name: String,
-    guestClass: String = "VIP",
-    checkInCount: String,
+    email: String,
+    mobile: String,
+    address: String,
+    arrived: Boolean,
     navController: NavController
 ) {
     Scaffold(
@@ -99,15 +101,19 @@ fun GuestDetailsScreen(
                     modifier = Modifier
                         .clip(RoundedCornerShape(2.dp))
                         .background(
-                            color = if (guestClass == "VIP") {
+                            color = if (!arrived) {
                                 Color(0xffe99d2a)
                             } else {
-                                Color.Red
+                                Color.Green
                             }
                         )
                 ) {
                     Text(
-                        text = guestClass,
+                        text = if (arrived) {
+                            "Arrived"
+                        } else {
+                            "Not Arrived"
+                        },
                         modifier = Modifier.padding(4.dp),
                         style = TextStyle(
                             fontSize = MaterialTheme.typography.bodySmall.fontSize,
@@ -115,32 +121,7 @@ fun GuestDetailsScreen(
                         )
                     )
                 }
-                Spacer(modifier = Modifier.padding(20.dp))
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.primary
-                    ),
-                    shape = RoundedCornerShape(4.dp)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(40.dp), contentAlignment = Alignment.Center
-                    ) {
-                        println("CheckInCount: $checkInCount")
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text(
-                                text = "CHECK-IN"
-                            )
-                            Text(
-                                text = "0 / $checkInCount"
-                            )
-                        }
-                    }
-                }
-
-                Spacer(modifier = Modifier.padding(20.dp))
+                Spacer(modifier = Modifier.padding(10.dp))
                 Text(
                     text = "E-mail",
                     style = TextStyle(
@@ -149,37 +130,33 @@ fun GuestDetailsScreen(
                 )
                 Spacer(modifier = Modifier.padding(4.dp))
                 Text(
-                    text = "gaurav@thelattice.in"
+                    text = email
                 )
 
 
                 Spacer(modifier = Modifier.padding(10.dp))
                 Text(
-                    text = "Notes",
+                    text = "Phone",
                     style = TextStyle(
                         fontSize = MaterialTheme.typography.titleLarge.fontSize,
                     )
                 )
                 Spacer(modifier = Modifier.padding(4.dp))
                 Text(
-                    text = "nicole@thelattice.in"
+                    text = mobile
                 )
 
 
                 Spacer(modifier = Modifier.padding(10.dp))
                 Text(
-                    text = "Added by",
+                    text = "Address",
                     style = TextStyle(
                         fontSize = MaterialTheme.typography.titleLarge.fontSize,
                     )
                 )
                 Spacer(modifier = Modifier.padding(4.dp))
                 Text(
-                    text = "Nicole Drew"
-                )
-                Text(
-                    text = "11-Feb-2025 2:46 pm",
-                    style = TextStyle(fontSize = MaterialTheme.typography.bodySmall.fontSize)
+                    text = address
                 )
             }
         }
@@ -190,11 +167,11 @@ fun GuestDetailsScreen(
 @Preview(showBackground = true)
 @Composable
 fun GuestDetailScreenPreview(modifier: Modifier = Modifier) {
-    GuestDetailsScreen(
-        name = "Nicole Drew",
-        checkInCount = "2",
-        guestClass = "VIP",
-        navController = rememberNavController()
-    )
+//    GuestDetailsScreen(
+//        name = "Nicole Drew",
+//        checkInCount = "2",
+//        guestClass = "VIP",
+//        navController = rememberNavController()
+//    )
 
 }

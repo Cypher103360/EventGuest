@@ -14,4 +14,14 @@ class EventRepositoryImpl @Inject constructor(private val eventApiService: Event
             emptyList()
         }
     }
+
+    override suspend fun addEvent(event: Event): Event {
+        val response = eventApiService.addEvent(event)
+        return if (response.isSuccessful) {
+            println("Event added successfully: ${response.body()}")
+            response.body() ?: event
+        } else {
+            throw Exception("Failed to add event: ${response.errorBody()?.string()}")
+        }
+    }
 }

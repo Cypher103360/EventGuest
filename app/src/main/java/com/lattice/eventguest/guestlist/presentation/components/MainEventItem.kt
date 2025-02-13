@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -20,13 +19,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.lattice.eventguest.guestlist.common.formatTimestamp
 import com.lattice.eventguest.ui.theme.EventGuestTheme
 
 @Composable
-fun DemoEventItem(title: String, date: String, onEventClick: () -> Unit) {
+fun MainEventItem(
+    title: String,
+    startTime: Long,
+    endTime: Long,
+    venue: String,
+    location: String,
+    onEventClick: () -> Unit) {
     Box(modifier = Modifier
         .fillMaxWidth()
         .clickable {
@@ -40,13 +45,12 @@ fun DemoEventItem(title: String, date: String, onEventClick: () -> Unit) {
             Text(
                 text = title,
                 style = TextStyle(
-                    fontSize = MaterialTheme.typography.titleLarge.fontSize,
-                    fontWeight = FontWeight.Light
+                    fontSize = MaterialTheme.typography.titleLarge.fontSize
                 )
             )
             Spacer(modifier = Modifier.padding(6.dp))
             Text(
-                text = date,
+                text = "${formatTimestamp(startTime)} - ${formatTimestamp(endTime)}",
                 style = TextStyle(
                     color = MaterialTheme.colorScheme.secondary,
                     fontSize = MaterialTheme.typography.titleMedium.fontSize
@@ -56,31 +60,14 @@ fun DemoEventItem(title: String, date: String, onEventClick: () -> Unit) {
             Row {
                 Row {
                     Icon(
-                        imageVector = Icons.Default.Person,
-                        contentDescription = "guests",
-                        modifier = Modifier.size(18.dp),
-                        tint = MaterialTheme.colorScheme.surfaceVariant
-                    )
-                    Text(
-                        modifier = Modifier.padding(start = 4.dp),
-                        text = "10 guests",
-                        style = TextStyle(
-                            color = MaterialTheme.colorScheme.secondary,
-                            fontSize = MaterialTheme.typography.titleMedium.fontSize
-                        )
-                    )
-                }
-                Spacer(modifier = Modifier.padding(8.dp))
-                Row {
-                    Icon(
                         imageVector = Icons.Default.LocationOn,
                         contentDescription = "guests",
                         modifier = Modifier.size(18.dp),
-                        tint = MaterialTheme.colorScheme.surfaceVariant
+                        tint = MaterialTheme.colorScheme.secondary
                     )
                     Text(
                         modifier = Modifier.padding(start = 4.dp),
-                        text = "Madison Square Garden",
+                        text = "$venue, $location",
                         style = TextStyle(
                             color = MaterialTheme.colorScheme.secondary,
                             fontSize = MaterialTheme.typography.titleMedium.fontSize
@@ -102,10 +89,10 @@ fun DemoEventItem(title: String, date: String, onEventClick: () -> Unit) {
 @Composable
 fun GreetingPreview() {
     EventGuestTheme {
-        DemoEventItem(
-            title = "A demo event",
-            date = "19 Feb 2025 01:30",
-            onEventClick = {}
-        )
+//        DemoEventItem(
+//            title = "A demo event",
+//            date = "19 Feb 2025 01:30",
+//            onEventClick = {}
+//        )
     }
 }

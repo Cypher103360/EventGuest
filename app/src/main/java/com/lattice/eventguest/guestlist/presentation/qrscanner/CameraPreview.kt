@@ -29,9 +29,10 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.navigation.NavController
 
 @Composable
-fun CameraPreview() {
+fun CameraPreview(onScan:(String) -> Unit, navController: NavController) {
     var code by remember { mutableStateOf("") }
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -77,6 +78,11 @@ fun CameraPreview() {
                         ContextCompat.getMainExecutor(context),
                         QrCodeAnalyzer { result ->
                             println("ScanResult: $result")
+                            if (result.isNotBlank()) {
+                                onScan(result)
+                                navController.popBackStack()
+                            }
+
                             code = result
                         }
                     )

@@ -25,24 +25,17 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.lattice.eventguest.guestlist.presentation.components.AddGuestListItem
 import com.lattice.eventguest.guestlist.presentation.viewmodel.GuestViewModel
+import com.lattice.eventguest.guestlist.presentation.viewmodel.PeopleViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddGuestScreen(
+    eventId: String,
     navController: NavController,
-    viewModel: GuestViewModel = hiltViewModel()
+    viewModel: PeopleViewModel = hiltViewModel(),
+    guestViewModel: GuestViewModel = hiltViewModel()
 ) {
-    val guestList = listOf(
-        Guest("Naveen", "Singh", "General", "2"),
-        Guest("Priya", "Sharma", "VIP", "1"),
-        Guest("Ravi", "Kumar", "General", "3"),
-        Guest("Sonal", "Gupta", "General", "5"),
-        Guest("Amit", "Yadav", "VIP", "4"),
-        Guest("Gaurav", "Kumar", "VIP", "0"),
-        Guest("Vishal", "Gola", "Genera", "1"),
-        Guest("Neha", "Dhupia", "General", "6"),
-        Guest("Sachin", "Tendulker", "VIP", "1")
-    )
+    val guestId  =  mutableListOf<String>()
     Scaffold(
         topBar = {
             TopAppBar(
@@ -66,7 +59,11 @@ fun AddGuestScreen(
                     Text(text = "Add Guest", color = MaterialTheme.colorScheme.onPrimary)
                 },
                 actions = {
-                    TextButton(onClick = {}) {
+                    TextButton(
+                        onClick = {
+                        guestViewModel.addGuestToEvent(eventId, guestId)
+                        navController.popBackStack()
+                    }) {
                         Text(text = "DONE", color = MaterialTheme.colorScheme.onPrimary)
                     }
                 }
@@ -75,15 +72,20 @@ fun AddGuestScreen(
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
             LazyColumn {
-                items(guestList.size) { item ->
-                    val guest = guestList[item]
+                items(viewModel.peopleList.size) { item ->
+                    val guest = viewModel.peopleList[item]
                     val isChecked = remember { mutableStateOf(false) }
                     AddGuestListItem(
-                        guestName = "${guest.name}",
+                        guestName = guest.name,
                         isChecked = isChecked.value,
                         onCheckChanged = {
                             isChecked.value = it
-                            println("Guest ${guest.name} ${guest.surname} checked")
+                            if (it) {
+                                guestId.add(guest.id)
+                            } else {
+                                guestId.remove(guest.id)
+                            }
+                            println("Guest $guestId checked")
                         }
                     )
                     HorizontalDivider(

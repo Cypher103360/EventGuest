@@ -18,17 +18,27 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.lattice.eventguest.guestlist.presentation.components.DemoEventItem
+import androidx.navigation.NavController
+import com.lattice.eventguest.guestlist.presentation.components.MainEventItem
 import com.lattice.eventguest.guestlist.presentation.viewmodel.EventViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GuestListScreen(
+    navController: NavController,
     onEvenClick: (String) -> Unit,
     viewModel: EventViewModel = hiltViewModel()
 ) {
+    LaunchedEffect(true) {
+        viewModel.fetchEvents()
+    }
+    val eventList by viewModel.eventList.collectAsState()
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -39,7 +49,9 @@ fun GuestListScreen(
                 actions = {
                     Row(horizontalArrangement = Arrangement.SpaceAround) {
                         IconButton(
-                            onClick = {}
+                            onClick = {
+                                navController.navigate("add_event")
+                            }
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Add,
@@ -67,11 +79,15 @@ fun GuestListScreen(
             .fillMaxSize()) {
 
             LazyColumn {
-                items(viewModel.eventList) { item ->
-                    DemoEventItem(
-                        title = item.title,
-                        date = "19 Feb 2025 01:30",
-                        onEventClick = { onEvenClick("A demo event") }
+                items(eventList.size) { item ->
+                    val events = eventList[item]
+                    MainEventItem(
+                        title = events.title,
+                        startTime = events.startTimeStamp,
+                        endTime = events.startTimeStamp,
+                        venue = events.venue,
+                        location = events.location,
+                        onEventClick = { onEvenClick(events.id) }
                     )
                 }
             }
